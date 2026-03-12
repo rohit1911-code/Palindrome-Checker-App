@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Stack;
 
 public class PalindromeCheckerApp {
     public static void main(String[] args) {
@@ -8,30 +9,34 @@ public class PalindromeCheckerApp {
         System.out.print("Input: ");
         String input = scanner.nextLine();
 
-        PalindromeService service = new PalindromeService();
-        boolean result = service.checkPalindrome(input);
+        PalindromeStrategy strategy = new StackStrategy();
 
-        System.out.println("Is Palindrome?: " + result);
+        boolean result = strategy.check(input);
+
+        System.out.println("Is Palindrome: " + result);
 
         scanner.close();
     }
 }
 
-class PalindromeService {
+interface PalindromeStrategy {
+    boolean check(String input);
+}
 
-    public boolean checkPalindrome(String input) {
+class StackStrategy implements PalindromeStrategy {
 
-        int start = 0;
-        int end = input.length() - 1;
+    public boolean check(String input) {
 
-        while (start < end) {
+        Stack<Character> stack = new Stack<>();
 
-            if (input.charAt(start) != input.charAt(end)) {
+        for (char c : input.toCharArray()) {
+            stack.push(c);
+        }
+
+        for (char c : input.toCharArray()) {
+            if (c != stack.pop()) {
                 return false;
             }
-
-            start++;
-            end--;
         }
 
         return true;
